@@ -103,6 +103,9 @@ add_filter( 'c2c_single_category_redirect_status', 'scp_change_redirect_status' 
 
 == Changelog ==
 
+= 2.5 (2020-08-01) =
+* Change: Fixed problems when a post is under 2 hierarchy of categories (one primary and one not)
+
 = 2.4.2 (2020-06-01) =
 * Change: Use HTTPS for link to WP SVN repository in bin script for configuring unit tests (and remove commented-out code)
 * Change: Note compatibility through WP 5.4+
