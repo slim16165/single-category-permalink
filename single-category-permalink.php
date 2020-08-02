@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Single Category Permalink
- * Version:     2.5
+ * Version:     2.6
  * Plugin URI:  https://coffee2code.com/wp-plugins/single-category-permalink/
  * Author:      Scott Reilly
  * Author URI:  https://coffee2code.com/
@@ -18,7 +18,7 @@
  *
  * @package Single_Category_Permalink
  * @author  Scott Reilly
- * @version 2.5
+ * @version 2.6
  */
 
 /*
@@ -52,7 +52,7 @@ class c2c_SingleCategoryPermalink
      */
     public static function version()
     {
-        return '2.5';
+        return '2.6';
     }
 
     /**
@@ -65,9 +65,51 @@ class c2c_SingleCategoryPermalink
         // Load textdomain.
         load_plugin_textdomain('single-category-permalink');
 
-        add_filter('term_link', array(__CLASS__, 'category_link'), 10, 3);
-        add_filter('post_link', array(__CLASS__, 'post_link'), 10, 2);
-        add_filter('template_redirect', array(__CLASS__, 'template_redirect'));
+        add_filter('term_link',             array(__CLASS__, 'category_link'),              1, 3);
+        add_filter('post_link',             array(__CLASS__, 'post_link'),                  1, 2);
+        add_filter('template_redirect',     array(__CLASS__, 'template_redirect'));
+        add_filter('wpseo_canonical',       array(__CLASS__, 'yoast_change_seo_canonical'), 1, 1 );
+        add_filter('wpseo_opengraph_url',   array(__CLASS__, 'yoast_change_seo_opengraph_url'), 10);
+        add_filter('wpseo_schema_article',  array(__CLASS__, 'example_change_article') );
+        add_filter('yoast_seo_development_mode', '__return_true' );
+        //remove_action('wp_head',
+        //add_action( 'wp_head', [ $this, 'call_wpseo_head' ], 1 );
+    }
+
+    /**
+     * Changes
+     * @param array $data Schema.org Article data array.
+     * @return void Schema.org Article data array.
+     */
+    public static function example_change_article( $data )
+    {
+        //self::PrintStackTrace();
+
+        //YoastSEO()->context_memoizer;
+
+        //PC::debug(YoastSEO()->meta->for_current_page());
+        //PC::debug($data);
+
+        //Change wp-content\plugins\wordpress-seo-premium\src\presenters\canonical-presenter.php\
+        //Add $this->presentation->canonical = get_permalink();
+
+        YoastSEO()->meta->for_current_page()->canonical = get_permalink();
+        YoastSEO()->meta->context_memoizer->for_current_page()->canonical = get_permalink();
+    }
+
+    public static function yoast_change_seo_canonical( $canonical )
+    {
+        if ( is_single() )
+        {
+            return get_permalink();
+        }
+        else
+            return $canonical;
+    }
+
+    public static function yoast_change_seo_opengraph_url( $canonical )
+    {
+        return get_permalink();
     }
 
     /**
@@ -110,6 +152,12 @@ class c2c_SingleCategoryPermalink
 
         //PC::debug($permalink);
         return $permalink;
+    }
+
+    protected static function PrintStackTrace(): void
+    {
+        $e = new \Exception;
+        var_dump($e->getTraceAsString());
     }
 
     /**
@@ -279,4 +327,4 @@ class c2c_SingleCategoryPermalink
 
 } // end c2c_SingleCategoryPermalink
 
-add_action('plugins_loaded', array('c2c_SingleCategoryPermalink', 'init'));
+add_action('plugins_loaded', array('c2c_SingleCategoryPermalink', 'init'), 1);

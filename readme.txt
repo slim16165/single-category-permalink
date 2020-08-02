@@ -103,6 +103,9 @@ add_filter( 'c2c_single_category_redirect_status', 'scp_change_redirect_status' 
 
 == Changelog ==
 
+= 2.6 (2020-08-01) =
+* Change: Now the plugin works also with Yoast (changes the canonical url, the og:url, and the url inside the schema)
+
 = 2.5 (2020-08-01) =
 * Change: Fixed problems when a post is under 2 hierarchy of categories (one primary and one not)
 

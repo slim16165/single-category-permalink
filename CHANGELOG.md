@@ -1,8 +1,10 @@
 # Changelog
 
+## 2.6 _(2020-08-01)_
+* Change: Now the plugin works also with Yoast (changes the canonical url, the og:url, and the url inside the schema)
+
 ## 2.5 _(2020-08-01)_
 * Change: Fixed problems when a post is under 2 hierarchy of categories (one primary and one not)
-
 
 ## 2.4.2 _(2020-06-01)_
 * Change: Use HTTPS for link to WP SVN repository in bin script for configuring unit tests (and remove commented-out code)
