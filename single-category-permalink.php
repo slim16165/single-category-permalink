@@ -125,29 +125,52 @@ class c2c_SingleCategoryPermalink
      */
     public static function post_link($permalink, $post)
     {
+//        $redis = new Redis();
+//        $redis->connect('127.0.0.1', 12345);
+//        $redis->auth('MyPassword');
+
+//        echo "Server is running: ".$redis->ping();
+
+        $cachedRedirect = wp_cache_get("$permalink");
+        if($cachedRedirect)
+        {
+//            PC::debug($cachedRedirect);
+            return $cachedRedirect;
+        }
+
+
         $permalink_structure = get_option('permalink_structure');
 
         // Only do anything if '%category%' is part of the post permalink
         if (strpos($permalink_structure, '%category%') !== false)
         {
-            //$category = self::GetLastCategory($post);
-            $categories = self::get_post_primary_category($post->ID);
-            $category = $categories['primary_category'];
+            $categoryOtherMethod = self::GetLastCategory($post);
+            $category = self::get_post_primary_category($post);
 
+//            PC::debug($categoryOtherMethod);
+            PC::debug($category);
 
-            // Find category hierachy for the category. By default, these would be
-            // part of the full category permalink.
+            // Find category hierachy for the category. By default, these would be part of the full category permalink.
             $category_hierarchy = $category->slug;
+            PC::debug($category->parent);
 
             if ($parent = $category->parent /* the id of the parent category or 0*/)
             {
                 $category_hierarchy = get_category_parents($parent, false, '/', true) . $category->slug;
                 //medicina-e-salute/integratori
+                PC::debug("entrato");
             }
 
             // Now that the permalink component involving category hierarchy consists of is known,
             // replace it with the main category slug
+            PC::debug($category_hierarchy);
+            PC::debug($category->slug);
+
+            $oldPermalink = $permalink;
             $permalink = str_replace($category_hierarchy, $category->slug, $permalink);
+            wp_cache_set($oldPermalink, $permalink);
+            PC::debug($oldPermalink);
+            PC::debug($permalink);
         }
 
         //PC::debug($permalink);
@@ -184,45 +207,32 @@ class c2c_SingleCategoryPermalink
         return $category;
     }
 
-    private static function get_post_primary_category($post_id, $term = 'category', $return_all_categories = false)
+    /**
+     * There is not primary category in wordpress if you have installed Yoast SEO plugin then a new feature will be appear on Single Posts category selection in admin area in order to choose primary category .
+     * @param WP_Post $post
+     * @param string $term
+     * @return array|mixed|object|WP_Error|null
+     */
+    private static function get_post_primary_category(WP_Post $post, $term = 'category')
     {
-        $return = array();
-
         if (class_exists('WPSEO_Primary_Term'))
         {
             // Show Primary category by Yoast if it is enabled & set
-            $wpseo_primary_term = new WPSEO_Primary_Term($term, $post_id);
+            $wpseo_primary_term = new WPSEO_Primary_Term($term, $post->ID);
             $primary_term = get_term($wpseo_primary_term->get_primary_term());
 
             if (!is_wp_error($primary_term))
             {
-                $return['primary_category'] = $primary_term;
+                PC::debug($primary_term);
+                return $primary_term;
             }
         }
 
-        if (empty($return['primary_category']) || $return_all_categories)
+        if (empty($return['primary_category']))
         {
-            $categories_list = get_the_terms($post_id, $term);
-
-            if (empty($return['primary_category']) && !empty($categories_list))
-            {
-                $return['primary_category'] = $categories_list[0];  //get the first category
-            }
-            if ($return_all_categories)
-            {
-                $return['all_categories'] = array();
-
-                if (!empty($categories_list))
-                {
-                    foreach ($categories_list as &$category)
-                    {
-                        $return['all_categories'][] = $category->term_id;
-                    }
-                }
-            }
+            PC::debug("primary_category è vuota");
+            return self::GetLastCategory($post);
         }
-
-        return $return;
     }
 
     /**
