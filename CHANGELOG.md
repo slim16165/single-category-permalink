@@ -1,5 +1,8 @@
 # Changelog
 
+# 3.0.1 _(2020-08-21)_
+* Change: fixed the sitemap of Yoast
+
 # 3.0 _(2020-08-04)_
 * Change: The primary category exists ONLY in Yoast, it's not a WP native property. Now it's handled the behaviour in case of multiple categories, primary category defined or not
 * Change: added cache

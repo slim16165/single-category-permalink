@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: Single Category Permalink
- * Version:     2.6
+ * Version:     3.0.1
  * Plugin URI:  https://coffee2code.com/wp-plugins/single-category-permalink/
- * Author:      Scott Reilly
+ * Author:      Scott Reilly, Gianluigi Salvi
  * Author URI:  https://coffee2code.com/
  * Text Domain: single-category-permalink
  * License:     GPLv2 or later
@@ -17,8 +17,8 @@
  * =>> Or visit: https://wordpress.org/plugins/single-category-permalinks/
  *
  * @package Single_Category_Permalink
- * @author  Scott Reilly
- * @version 2.6
+ * @author  Scott Reilly, Gianluigi Salvi
+ * @version 3.0.1
  */
 
 /*
@@ -187,7 +187,7 @@ class c2c_SingleCategoryPermalink
      * @param WP_Post $post
      * @return array|mixed|object|WP_Error|null
      */
-    private static function GetLastCategory(WP_Post $post)
+    private static function GetLastCategory($post)
     {
         // See the problems when a post is under more categories
         // https://stackoverflow.com/questions/45693271/getting-wordpress-single-post-primary-category
@@ -213,7 +213,7 @@ class c2c_SingleCategoryPermalink
      * @param string $term
      * @return array|mixed|object|WP_Error|null
      */
-    private static function get_post_primary_category(WP_Post $post, $term = 'category')
+    private static function get_post_primary_category($post, $term = 'category')
     {
         if (class_exists('WPSEO_Primary_Term'))
         {

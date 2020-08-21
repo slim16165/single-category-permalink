@@ -103,6 +103,9 @@ add_filter( 'c2c_single_category_redirect_status', 'scp_change_redirect_status' 
 
 == Changelog ==
 
+= 3.0.1 (2020-08-21) =
+* Change: fixed the sitemap of Yoast
+
 = 3.0 (2020-08-04) =
 * Change: The primary category exists ONLY in Yoast, it's not a WP native property. Now it's handled the behaviour in case of multiple categories, primary category defined or not
 * Change: added cache
