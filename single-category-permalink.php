@@ -94,7 +94,7 @@ class c2c_SingleCategoryPermalink
         //Add $this->presentation->canonical = get_permalink();
 
         YoastSEO()->meta->for_current_page()->canonical = get_permalink();
-        YoastSEO()->meta->context_memoizer->for_current_page()->canonical = get_permalink();
+        //YoastSEO()->meta->context_memoizer->for_current_page()->canonical = get_permalink();
     }
 
     public static function yoast_change_seo_canonical( $canonical )
@@ -148,29 +148,29 @@ class c2c_SingleCategoryPermalink
             $category = self::get_post_primary_category($post);
 
 //            PC::debug($categoryOtherMethod);
-            PC::debug($category);
+//            PC::debug($category);
 
             // Find category hierachy for the category. By default, these would be part of the full category permalink.
             $category_hierarchy = $category->slug;
-            PC::debug($category->parent);
+ //           PC::debug($category->parent);
 
             if ($parent = $category->parent /* the id of the parent category or 0*/)
             {
                 $category_hierarchy = get_category_parents($parent, false, '/', true) . $category->slug;
                 //medicina-e-salute/integratori
-                PC::debug("entrato");
+                //PC::debug("entrato");
             }
 
             // Now that the permalink component involving category hierarchy consists of is known,
             // replace it with the main category slug
-            PC::debug($category_hierarchy);
-            PC::debug($category->slug);
+            //PC::debug($category_hierarchy);
+            //PC::debug($category->slug);
 
             $oldPermalink = $permalink;
             $permalink = str_replace($category_hierarchy, $category->slug, $permalink);
             wp_cache_set($oldPermalink, $permalink);
-            PC::debug($oldPermalink);
-            PC::debug($permalink);
+            //PC::debug($oldPermalink);
+            //debug($permalink);
         }
 
         //PC::debug($permalink);
@@ -223,14 +223,14 @@ class c2c_SingleCategoryPermalink
 
             if (!is_wp_error($primary_term))
             {
-                PC::debug($primary_term);
+                //PC::debug($primary_term);
                 return $primary_term;
             }
         }
 
         if (empty($return['primary_category']))
         {
-            PC::debug("primary_category è vuota");
+            //PC::debug("primary_category è vuota");
             return self::GetLastCategory($post);
         }
     }

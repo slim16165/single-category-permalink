@@ -1,5 +1,9 @@
 # Changelog
 
+# 3.0 _(2020-08-04)_
+* Change: The primary category exists ONLY in Yoast, it's not a WP native property. Now it's handled the behaviour in case of multiple categories, primary category defined or not
+* Change: added cache
+
 ## 2.6 _(2020-08-01)_
 * Change: Now the plugin works also with Yoast (changes the canonical url, the og:url, and the url inside the schema)
 
